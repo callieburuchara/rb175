@@ -2,19 +2,33 @@ require "tilt/erubis"
 require "sinatra"
 require "sinatra/reloader"
 
+before do
+  @table_of_contents = File.readlines("data/toc.txt")
+end
+
+helpers do
+  def in_paragraphs(text)
+    text = text.split("\n\n")
+    text.map { |line| "<p>#{line}</p>" }.join
+  end
+end
+
+not_found do
+  redirect '/'
+end
+
 get "/" do
   @title = "The Adventures of Sherlock Holmes"
-  @table_of_contents = File.readlines('data/toc.txt')
-  
   erb :home
 end
 
 get '/chapters/:number' do
-  number = params[:number]
-  @table_of_contents = File.readlines('data/toc.txt')
-  @contents = File.read("data/chp#{number}.txt")
+  number = params[:number].to_i
+  redirect "/" unless (1..@table_of_contents.size).include?(number)
+
+  @contents = in_paragraphs(File.read("data/chp#{number}.txt"))
   
-  name = @table_of_contents[number.to_i - 1]
+  name = @table_of_contents[number - 1]
   @chapter_title = "Chapter #{number}: #{name}"
 
 
