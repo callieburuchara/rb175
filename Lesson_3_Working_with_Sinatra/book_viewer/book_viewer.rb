@@ -9,8 +9,15 @@ end
 helpers do
   def in_paragraphs(text)
     text = text.split("\n\n")
-    text.map { |line| "<p>#{line}</p>" }.join
+    text.map.with_index do |line, idx| 
+      "<p id=paragraph#{idx}>#{line}</p>"
+    end.join
   end
+
+  def highlight(text, term)
+    text.gsub(term, %(<strong>#{term}</strong>))
+  end
+
 end
 
 not_found do
@@ -46,10 +53,15 @@ end
 def chapters_matching(query)
   results = []
 
-  return results if !query || query.empty?
+  return results unless query
 
   each_chapter do |number, name, contents|
-    results << {number: number, name: name} if contents.include?(query)
+    matches = {}
+    contents.split("\n\n").each_with_index do |paragraph, index|
+      matches[index] = paragraph if paragraph.include?(query)
+    end
+
+    results << {number: number, name: name, paragraphs: matches} if matches.any?   
   end
   
   results

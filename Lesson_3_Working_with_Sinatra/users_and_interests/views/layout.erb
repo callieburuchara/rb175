@@ -1,0 +1,25 @@
+<!doctype html> 
+<html>
+  <head>
+  </head>
+
+  <body>
+    <header>
+      <h1 style='text-align:center'><a href='/'>Users & Interests</a></h1>
+    </header>
+
+    <main>
+      <%= yield %>
+    </main>
+
+  </body>
+
+  <footer>
+    <%= yield_content :each_user %>
+    <br><br>
+    <h4>There are <%= @user_amount %> users with a total of <%= @interests_amount %> interests.</h4>
+  </footer>
+
+</html>
+
+

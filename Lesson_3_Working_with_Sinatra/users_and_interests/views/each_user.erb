@@ -1,0 +1,15 @@
+<ul>
+  <li> Name: <%= @name %></li>
+  <li> Email: <%= @all_users[@key_name][:email] %></li>
+  <li> Interests: <%= @all_users[@key_name][:interests].join(', ')%></li>
+</ul>
+
+<% content_for :each_user do %>
+  <ul>
+    <% @all_users.keys.each do |name| %>
+      <% name = name.to_s.capitalize %>
+      <% next if @name == name.capitalize %>
+      <li><a href='/users/<%= name.downcase %>'><%= name %></a></li>
+    <% end %>
+  </ul>
+<% end %>
