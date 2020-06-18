@@ -21,6 +21,10 @@ helpers do
   end
 end
 
+not_found do 
+  erb :not_found
+end
+
 get '/' do
   redirect '/all-users'
 end
@@ -31,6 +35,7 @@ end
 
 get '/users/:name' do 
   @name = request.path_info.split('/')[-1].capitalize
+  redirect :notfound unless @all_users.keys.include?(@name.downcase.to_sym)
   @key_name = @name.downcase.to_sym
   erb :each_user
 end
